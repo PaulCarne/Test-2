@@ -9,7 +9,7 @@
     <style>
         *, *::before, *::after {
             padding: 0;
-            margin: 0 auto;
+            margin: 0;
             box-sizing: border-box;
         }
 
@@ -37,19 +37,22 @@
         .playButton {
             position: relative;
             width: 160px;
-            height: 80px;
-            border-radius: 10% / 20%;
+            height: 160px;
+            border-radius: 50%;
             background-color: red;
-            perspective: 320px;
+            perspective: 1000px;
             cursor: pointer;
             margin: 1em auto;
             transition: background-color 0.5s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .icon {
-            position: absolute;
-            top: 50%;
-            left: 50%;
+            width: 60px;
+            height: 60px;
+            position: relative;
             transform: rotateY(0deg);
             transform-style: preserve-3d;
             transition: transform 0.5s;
@@ -57,27 +60,23 @@
 
         .icon div {
             position: absolute;
-            background-color: #fff;
+            width: 0;
+            height: 0;
+            border-style: solid;
         }
 
         .icon div:nth-child(1),
         .icon div:nth-child(3) {
-            width: 0;
-            height: 0;
-            border-left: 30px solid #fff;
-            border-top: 15px solid transparent;
-            border-bottom: 15px solid transparent;
-            transform: translateZ(15px) translateX(-15px);
+            border-width: 30px 0 30px 60px;
+            border-color: transparent transparent transparent #fff;
+            transform: translateZ(15px);
         }
 
         .icon div:nth-child(2),
         .icon div:nth-child(4) {
-            width: 0;
-            height: 0;
-            border-left: 30px solid #fff;
-            border-top: 15px solid transparent;
-            border-bottom: 15px solid transparent;
-            transform: translateZ(-15px) translateX(-15px);
+            border-width: 30px 60px 30px 0;
+            border-color: transparent #fff transparent transparent;
+            transform: translateZ(-15px) rotateY(180deg);
         }
     </style>
 </head>
@@ -85,8 +84,10 @@
     <input type="checkbox" id="cb-pause">
     <label class="playButton" for="cb-pause">
         <div class="icon pause">
-            <div></div><div></div>
-            <div></div><div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
         </div>
     </label>
 </body>
