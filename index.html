@@ -24,7 +24,8 @@
         input[type="checkbox"] {
             appearance: none;
             position: fixed;
-            top: -100%; left: -100%;
+            top: -100%;
+            left: -100%;
         }
 
         input[type="checkbox"]:checked + .playButton {
@@ -34,24 +35,23 @@
 
         .playButton {
             position: relative;
-            width: 160px; 
+            width: 160px;
             height: 80px;
             border-radius: 10% / 20%;
             background-color: var(--clr, red);
             perspective: 320px;
             cursor: pointer;
+            margin: 1em auto;
             transition: background-color 0.5s;
         }
 
         .icon {
             position: absolute;
-            top: 50%; 
+            top: 50%;
             left: 50%;
             transform: translate(-50%, -50%) rotateY(var(--ry, 0deg));
             transform-style: preserve-3d;
             transition: transform 0.5s;
-            width: 30px;
-            height: 30px;
         }
 
         .icon.pause > div {
@@ -62,7 +62,7 @@
         /* Play icon - Two triangles */
         .icon.pause > div:nth-child(1),
         .icon.pause > div:nth-child(2) {
-            width: 30px; 
+            width: 30px;
             height: 30px;
             clip-path: polygon(0 0, 100% 50%, 0 100%);
             transform: translateZ(15px);
