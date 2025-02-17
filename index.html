@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Watch the Video</title>
+    <style>
+        *, *::before, *::after {
+            padding: 0;
+            margin: 0 auto;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #000;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        input[type="checkbox"] {
+            appearance: none;
+            position: fixed;
+            top: -100%;
+            left: -100%;
+        }
+
+        input[type="checkbox"]:checked + .playButton .icon {
+            transform: rotateY(90deg);
+        }
+
+        .playButton {
+            position: relative;
+            width: 160px;
+            height: 80px;
+            border-radius: 10% / 20%;
+            background-color: red;
+            perspective: 320px;
+            cursor: pointer;
+            margin: 1em auto;
+            transition: background-color 0.5s;
+        }
+
+        .icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: rotateY(0deg);
+            transform-style: preserve-3d;
+            transition: transform 0.5s;
+        }
+
+        .icon div {
+            position: absolute;
+            background-color: #fff;
+        }
+
+        .icon div:nth-child(1),
+        .icon div:nth-child(3) {
+            width: 0;
+            height: 0;
+            border-left: 30px solid #fff;
+            border-top: 15px solid transparent;
+            border-bottom: 15px solid transparent;
+            transform: translateZ(15px) translateX(-15px);
+        }
+
+        .icon div:nth-child(2),
+        .icon div:nth-child(4) {
+            width: 0;
+            height: 0;
+            border-left: 30px solid #fff;
+            border-top: 15px solid transparent;
+            border-bottom: 15px solid transparent;
+            transform: translateZ(-15px) translateX(-15px);
+        }
+    </style>
+</head>
+<body>
+    <div id="background"></div>
+    <div id="content">
+        <div id="player"></div>
+        <div id="overlay-permanent"></div>
+        <div id="overlay-paused"></div>
+        <input type="checkbox" id="cb-pause">
+        <label class="playButton" for="cb-pause">
+            <div class="icon">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </label>
+    </div>
+
+    <script>
+        var player;
+        var videoStarted = false;
+
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                videoId: 'AaayAuLZkmk',
+                playerVars: { 'autoplay': 1, 'controls': 0, 'mute': 1, 'playsinline': 1, 'rel': 0 },
+                events: { 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange }
+            });
+        }
+
+        function onPlayerReady(event) {
+            event.target.playVideo();
+            player.unMute();
+            videoStarted = true;
+        }
+
+        function onPlayerStateChange(event) {
+            if (event.data === YT.PlayerState.ENDED) {
+                window.location.href = "https://forms.office.com/r/75jdBjwfDw";
+            }
+        }
+
+        function togglePause() {
+            if (player.getPlayerState() === YT.PlayerState.PLAYING) {
+                player.pauseVideo();
+            } else {
+                player.playVideo();
+            }
+        }
+
+        function startVideo() {
+            player.playVideo();
+            player.unMute();
+            videoStarted = true;
+        }
+
+        document.getElementById('cb-pause').addEventListener('change', function() {
+            togglePause();
+        });
+    </script>
+    <script src="https://www.youtube.com/iframe_api"></script>
+</body>
+</html>
