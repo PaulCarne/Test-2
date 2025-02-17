@@ -3,13 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Play-Pause Button</title>
+    <title>Play Pause Button</title>
     <style>
         *, *::before, *::after {
             padding: 0;
-            margin: 0;
+            margin: 0 auto;
             box-sizing: border-box;
         }
 
@@ -26,57 +24,53 @@
         input[type="checkbox"] {
             appearance: none;
             position: fixed;
-            top: -100%;
-            left: -100%;
+            top: -100%; left: -100%;
         }
 
-        input[type="checkbox"]:checked + .playButton .icon {
-            transform: rotateY(90deg);
+        input[type="checkbox"]:checked + .playButton {
+            --ry: 90deg;
+            --clr: maroon;
         }
 
         .playButton {
             position: relative;
-            width: 160px;
-            height: 160px;
-            border-radius: 50%;
-            background-color: red;
-            perspective: 1000px;
+            width: 160px; height: 80px;
+            border-radius: 10% / 20%;
+            background-color: var(--clr, red);
+            perspective: 320px;
             cursor: pointer;
             margin: 1em auto;
             transition: background-color 0.5s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         .icon {
-            width: 60px;
-            height: 60px;
-            position: relative;
-            transform: rotateY(0deg);
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: rotateY(var(--ry, 0deg));
             transform-style: preserve-3d;
             transition: transform 0.5s;
         }
 
-        .icon div {
+        .pause > div {
             position: absolute;
-            width: 0;
-            height: 0;
-            border-style: solid;
+            background-color: #fff;
         }
 
-        .icon div:nth-child(1),
-        .icon div:nth-child(3) {
-            border-width: 30px 0 30px 60px;
-            border-color: transparent transparent transparent #fff;
-            transform: translateZ(15px) translateX(-30px);
+        .pause > div:nth-child(1),
+        .pause > div:nth-child(2) {
+            top: -15px; left: -9px;
+            width: 30px; height: 30px;
+            clip-path: polygon(0 0, 100% 50%, 0 100%);
+            transform: translateZ(-5px);
         }
 
-        .icon div:nth-child(2),
-        .icon div:nth-child(4) {
-            border-width: 30px 0 30px 60px;
-            border-color: transparent transparent transparent #fff;
-            transform: translateZ(-15px) translateX(-30px) rotateY(180deg);
+        .pause > div:nth-child(3),
+        .pause > div:nth-child(4) {
+            top: -15px; left: -9px;
+            width: 10px; height: 30px;
+            transform-origin: left;
+            transform: translateZ(-15px) rotateY(-90deg);
+            box-shadow: 0 0 5px #0005 inset;
         }
     </style>
 </head>
@@ -84,10 +78,8 @@
     <input type="checkbox" id="cb-pause">
     <label class="playButton" for="cb-pause">
         <div class="icon pause">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
+            <div></div><div></div>
+            <div></div><div></div>
         </div>
     </label>
 </body>
