@@ -177,13 +177,13 @@
             }
         }
 
-        function togglePause() {
-            if (player.getPlayerState() === YT.PlayerState.PLAYING) {
-                player.pauseVideo();
-            } else {
+        document.getElementById('cb-pause').addEventListener('change', function() {
+            if (this.checked) {
                 player.playVideo();
+            } else {
+                player.pauseVideo();
             }
-        }
+        });
 
         function startVideo() {
             player.playVideo();
