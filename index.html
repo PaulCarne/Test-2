@@ -7,16 +7,23 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Watch the Video</title>
     <style>
+        *, *::before, *::after {
+            padding: 0;
+            margin: 0 auto;
+            box-sizing: border-box;
+        }
+
         body {
+            background-color: #000;
+            color: #fff;
+            min-height: 100vh;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            height: 100vh;
-            margin: 0;
-            text-align: center;
-            background: #000000;
+            justify-content: center;
             overflow: hidden;
         }
+
         #background, #overlay-permanent, #overlay-paused {
             position: absolute;
             top: 0;
@@ -56,19 +63,76 @@
             border: none;
             z-index: 3;
         }
-        .control-button {
+
+        /* Rotating Play/Pause Button */
+        input[type="checkbox"] {
+            appearance: none;
+            position: fixed;
+            top: -100%; left: -100%;
+        }
+
+        input[type="checkbox"]:checked + .playButton {
+            --ry: 90deg;
+            --clr: maroon;
+        }
+
+        .playButton {
             position: absolute;
             bottom: 20px;
             left: 20px;
-            background: none;
-            border: none;
+            width: 160px; height: 80px;
+            border-radius: 10% / 20%;
+            background-color: var(--clr, red);
+            perspective: 320px;
             cursor: pointer;
+            margin: 1em auto;
+            transition: background-color 0.5s;
             z-index: 6;
         }
-        .control-button svg {
-            width: 50px;
-            height: 50px;
-            fill: red;
+
+        .icon {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: rotateY(var(--ry, 0deg));
+            transform-style: preserve-3d;
+            transition: transform 0.5s;
+        }
+
+        .icon.pause > div {
+            position: absolute;
+            background-color: #fff;
+        }
+
+        .icon.pause > div:nth-child(1) {
+            top: -15px; left: -9px;
+            width: 30px; height: 30px;
+            clip-path: polygon(0 0, 100% 50%, 0 100%);
+            transform: translateZ(-5px);
+            background-image: linear-gradient(334deg, #0005 12px, #0000 19px), linear-gradient(206deg, #0005 12px, #0000 19px), linear-gradient(90deg, #0005, #0000 7px);
+        }
+
+        .icon.pause > div:nth-child(2) {
+            top: -15px; left: -9px;
+            width: 30px; height: 30px;
+            clip-path: polygon(0 0, 100% 50%, 0 100%);
+            transform: translateZ(15px);
+            background-image: linear-gradient(334deg, #0005 12px, #0000 19px), linear-gradient(206deg, #0005 12px, #0000 19px), linear-gradient(90deg, #0005, #0000 7px);
+        }
+
+        .icon.pause > div:nth-child(3) {
+            top: -15px; left: -9px;
+            width: 10px; height: 30px;
+            transform-origin: left;
+            transform: translateZ(-15px) rotateY(-90deg);
+            box-shadow: 0 0 5px #0005 inset;
+        }
+
+        .icon.pause > div:nth-child(4) {
+            top: -15px; left: -9px;
+            width: 10px; height: 30px;
+            transform-origin: left;
+            transform: translateZ(5px) rotateY(-90deg);
+            box-shadow: 0 0 5px #0005 inset;
         }
     </style>
 </head>
@@ -78,12 +142,13 @@
         <div id="player"></div>
         <div id="overlay-permanent"></div>
         <div id="overlay-paused"></div>
-        <button id="pause-button" class="control-button">
-            <svg id="pause-icon" viewBox="0 0 24 24">
-                <rect x="6" y="4" width="4" height="16"></rect>
-                <rect x="14" y="4" width="4" height="16"></rect>
-            </svg>
-        </button>
+        <input type="checkbox" id="cb-pause">
+        <label class="playButton" for="cb-pause">
+            <div class="icon pause">
+                <div></div><div></div>
+                <div></div><div></div>
+            </div>
+        </label>
         <button id="start-button" class="control-button" style="display: none;">
             <svg viewBox="0 0 24 24">
                 <polygon points="6,4 20,12 6,20"></polygon>
@@ -107,16 +172,15 @@
             event.target.playVideo();
             player.unMute();
             videoStarted = true;
-            document.getElementById('pause-button').style.display = 'block';
         }
 
         function onPlayerStateChange(event) {
             if (event.data === YT.PlayerState.ENDED) {
                 window.location.href = "https://forms.office.com/r/75jdBjwfDw";
             } else if (event.data === YT.PlayerState.PAUSED) {
-                document.getElementById('pause-icon').innerHTML = '<polygon points="6,4 20,12 6,20"></polygon>';
+                document.getElementById('cb-pause').checked = true;
             } else if (event.data === YT.PlayerState.PLAYING) {
-                document.getElementById('pause-icon').innerHTML = '<rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect>';
+                document.getElementById('cb-pause').checked = false;
             }
         }
 
@@ -135,7 +199,7 @@
             document.getElementById('start-button').style.display = 'none';
         }
 
-        document.getElementById('pause-button').addEventListener('click', togglePause);
+        document.getElementById('cb-pause').addEventListener('change', togglePause);
         document.getElementById('start-button').addEventListener('click', startVideo);
 
         // Load the IFrame Player API code asynchronously.
