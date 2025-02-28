@@ -7,23 +7,16 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Watch the Video</title>
     <style>
-        *, *::before, *::after {
-            padding: 0;
-            margin: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            background-color: #000;
-            color: #fff;
-            min-height: 100vh;
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+            background: #000000;
             overflow: hidden;
         }
-
         #background, #overlay-permanent, #overlay-paused {
             position: absolute;
             top: 0;
@@ -63,8 +56,7 @@
             border: none;
             z-index: 3;
         }
-
-        /* Rotating Play/Pause Button */
+       /* Rotating Play/Pause Button */
         input[type="checkbox"] {
             appearance: none;
             position: fixed;
@@ -199,15 +191,7 @@
             videoStarted = true;
             document.getElementById('start-button').style.display = 'none';
         }
-
-        document.getElementById('cb-pause').addEventListener('change', togglePause);
-        document.getElementById('start-button').addEventListener('click', startVideo);
-
-        // Load the IFrame Player API code asynchronously.
-        var tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
     </script>
+    <script src="https://www.youtube.com/iframe_api"></script>
 </body>
 </html>
