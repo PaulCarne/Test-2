@@ -1,1 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Watch the Video</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+            background: #000000;
+            overflow: hidden;
+        }
+        #background, #overlay-permanent, #overlay-paused {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        #background {
+            z-index: 1;
+        }
+        #overlay-permanent {
+            background: transparent;
+            z-index: 4;
+        }
+        #overlay-paused {
+            display: none;
+            background: transparent;
+            z-index: 5;
+        }
+        #content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        #player {
+            width: 100%;
+            height: 100%;
+            max-width: 100%;
+            max-height: 100%;
+            border: none;
+            z-index: 3;
+        }
+        .control-button {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            z-index: 6;
+        }
+        .control-button svg {
+            width: 50px;
+            height: 50px;
+            fill: red;
+        }
+    </style>
+</head>
+<body>
+    <div id="background"></div>
+    <div id="content">
+        <div id="player"></div>
+        <div id="overlay-permanent"></div>
+        <div id="overlay-paused"></div>
+        <button id="pause-button" class="control-button">
+            <svg id="pause-icon" viewBox="0 0 24 24">
+                <rect x="6" y="4" width="4" height="16"></rect>
+                <rect x="14" y="4" width="4" height="16"></rect>
+            </svg>
+        </button>
+        <button id="start-button" class="control-button" style="display: none;">
+            <svg viewBox="0 0 24 24">
+                <polygon points="6,4 20,12 6,20"></polygon>
+            </svg>
+        </button>
+    </div>
 
+    <script>
+        var player;
+        var videoStarted = false;
+
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                videoId: 'AaayAuLZkmk',
+                playerVars: { 'autoplay': 1, 'controls': 0, 'mute': 1, 'playsinline': 1, 'rel': 0 },
+                events: { 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange }
+            });
+        }
+
+        function onPlayerReady(event) {
+            event.target.playVideo();
+            player.unMute();
+            videoStarted = true;
+            document.getElementById('pause-button').style.display = 'block';
+        }
+
+        function onPlayerStateChange(event) {
+            if (event.data === YT.PlayerState.ENDED) {
+                window.location.href = "https://forms.office.com/r/75jdBjwfDw";
+            } else if (event.data === YT.PlayerState.PAUSED) {
+                document.getElementById('pause-icon').innerHTML = '<polygon points="6,4 20,12 6,20"></polygon>';
+            } else if (event.data === YT.PlayerState.PLAYING) {
+                document.getElementById('pause-icon').innerHTML = '<rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect>';
+            }
+        }
+
+        function togglePause() {
+            if (player.getPlayerState() === YT.PlayerState.PLAYING) {
+                player.pauseVideo();
+            } else {
+                player.playVideo();
+            }
+        }
+
+        function startVideo() {
+            player.playVideo();
+            player.unMute();
+            videoStarted = true;
+            document.getElementById('start-button').style.display = 'none';
+        }
+
+        document.getElementById('pause-button').addEventListener('click', togglePause);
+        document.getElementById('start-button').addEventListener('click', startVideo);
+
+        // Load the IFrame Player API code asynchronously.
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    </script>
+</body>
+</html>
