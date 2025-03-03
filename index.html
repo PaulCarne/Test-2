@@ -59,10 +59,10 @@
 
         /* New Play/Pause Button Styles */
         .button {
-            font-size: 200%; /* Reduced size by 50% */
+            font-size: 200%;
             position: absolute;
-            bottom: 20px; /* Positioned at the bottom left */
-            left: 20px; /* Positioned at the bottom left */
+            bottom: 20px;
+            left: calc(20px + 1%);
             border: 1px solid #aaa;
             height: 1em;
             width: 1em;
@@ -70,7 +70,7 @@
             border-radius: 50%;
             transition: all 0.25s ease;
             cursor: pointer;
-            z-index: 6; /* Ensure the button is above other elements */
+            z-index: 6;
         }
         .button:before {
             content: "";
