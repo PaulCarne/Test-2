@@ -108,21 +108,21 @@
             .button {
                 left: calc(20px + 1%);
                 bottom: 20px;
-                width: 1em; /* Same size as desktop */
-                height: 1em; /* Same size as desktop */
-                font-size: 180%; /* Same size as desktop */
+                width: calc(1em * 0.85); /* 15% smaller */
+                height: calc(1em * 0.85); /* 15% smaller */
+                font-size: calc(180% * 0.85); /* 15% smaller */
             }
 
             .play:before {
-                border-left: .75em solid green; /* Same size as desktop */
+                border-left: calc(.75em * 0.85); /* 15% smaller */
             }
 
             .paused:before {
                 border-width: 0;
-                border-left: .4em solid red; /* Same size as desktop */
-                border-right: .4em solid red; /* Same size as desktop */
-                height: 1em; /* Same size as desktop */
-                width: .2em; /* Same size as desktop */
+                border-left: calc(.4em * 0.85); /* 15% smaller */
+                border-right: calc(.4em * 0.85); /* 15% smaller */
+                height: calc(1em * 0.85); /* 15% smaller */
+                width: calc(.2em * 0.85); /* 15% smaller */
             }
         }
     </style>
