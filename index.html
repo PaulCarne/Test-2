@@ -64,8 +64,8 @@
             bottom: 20px;
             left: calc(20px + 1%);
             border: 1px solid transparent;
-            height: 1em;
-            width: 1em;
+            height: 3em; /* Adjusted for better visibility */
+            width: 3em; /* Adjusted for better visibility */
             padding: .25em;
             border-radius: 50%;
             display: flex;
@@ -74,33 +74,17 @@
             transition: all 0.25s ease;
             cursor: pointer;
             z-index: 6; /* Ensure the button is above other elements */
+            background-color: rgba(0, 0, 0, 0.5); /* Added background for better visibility */
         }
-        .button:before {
-            content: "";
-            transition: all 0.25s ease;
-            border: .5em solid transparent;
-            border-right-width: 0;
-            height: 0;
-            width: 0;
+        .button svg {
+            height: 1.5em; /* Adjusted for better visibility */
+            width: 1.5em; /* Adjusted for better visibility */
         }
-
         .play {
             border-color: green;
         }
-        .play:before {
-            border-left: .75em solid green;
-        }
-
         .paused {
-            border-radius: 5%;
             border-color: red;
-        }
-        .paused:before {
-            border-width: 0;
-            border-left: .4em solid red;
-            border-right: .4em solid red;
-            height: 1em;
-            width: .2em;
         }
 
         /* Adjust button position and size for mobile devices */
@@ -108,21 +92,14 @@
             .button {
                 left: calc(20px + 1%);
                 bottom: 20px;
-                width: calc(1em * 0.85); /* 15% smaller */
-                height: calc(1em * 0.85); /* 15% smaller */
+                width: 2.5em; /* 15% smaller */
+                height: 2.5em; /* 15% smaller */
                 font-size: calc(180% * 0.85); /* 15% smaller */
             }
 
-            .play:before {
-                border-left: calc(.75em * 0.85); /* 15% smaller */
-            }
-
-            .paused:before {
-                border-width: 0;
-                border-left: calc(.4em * 0.85); /* 15% smaller */
-                border-right: calc(.4em * 0.85); /* 15% smaller */
-                height: calc(1em * 0.85); /* 15% smaller */
-                width: calc(.2em * 0.85); /* 15% smaller */
+            .button svg {
+                height: calc(1.5em * 0.85); /* 15% smaller */
+                width: calc(1.5em * 0.85); /* 15% smaller */
             }
         }
     </style>
@@ -133,7 +110,17 @@
         <div id="player"></div>
         <div id="overlay-permanent"></div>
         <div id="overlay-paused"></div>
-        <div class="button play" aria-label="Play/Pause Button"></div>
+        <div class="button play" aria-label="Play/Pause Button">
+            <!-- Play Icon -->
+            <svg class="icon-play" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="green" style="display: block;">
+                <polygon points="5,3 19,12 5,21"/>
+            </svg>
+            <!-- Pause Icon -->
+            <svg class="icon-pause" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="red" style="display: none;">
+                <rect x="6" y="4" width="4" height="16"/>
+                <rect x="14" y="4" width="4" height="16"/>
+            </svg>
+        </div>
         <button id="start-button" class="control-button" style="display: none;" aria-label="Start Video Button">
             <svg viewBox="0 0 24 24">
                 <polygon points="6,4 20,12 6,20"></polygon>
@@ -166,9 +153,13 @@
             } else if (event.data === YT.PlayerState.PAUSED) {
                 document.querySelector('.button').classList.remove('paused');
                 document.querySelector('.button').classList.add('play');
+                document.querySelector('.icon-play').style.display = 'block';
+                document.querySelector('.icon-pause').style.display = 'none';
             } else if (event.data === YT.PlayerState.PLAYING) {
                 document.querySelector('.button').classList.remove('play');
                 document.querySelector('.button').classList.add('paused');
+                document.querySelector('.icon-play').style.display = 'none';
+                document.querySelector('.icon-pause').style.display = 'block';
             }
         }
 
@@ -177,10 +168,14 @@
                 player.playVideo();
                 this.classList.remove('play');
                 this.classList.add('paused');
+                document.querySelector('.icon-play').style.display = 'none';
+                document.querySelector('.icon-pause').style.display = 'block';
             } else {
                 player.pauseVideo();
                 this.classList.remove('paused');
                 this.classList.add('play');
+                document.querySelector('.icon-play').style.display = 'block';
+                document.querySelector('.icon-pause').style.display = 'none';
             }
         });
 
