@@ -58,68 +58,86 @@
         }
 
         /* New Play/Pause Button Styles */
-        $playColor: #aaa;
-        $playColor-hover: #0a0;
-        $pauseColor: #f00;
-        $pauseColor-hover: #aaa;
-        $buttonSize: 400%;
-        $speed: .25s;
-
         .button {
-            font-size: $buttonSize;
+            font-size: 400%;
             position: relative;
-            border: 1px solid $playColor;
+            border: 1px solid #aaa;
             height: 1em;
             width: 1em;
             padding: .25em;
             border-radius: 50%;
-            transition: all $speed ease;
+            transition: all 0.25s ease;
+            cursor: pointer;
+            z-index: 6; /* Ensure the button is above other elements */
         }
         .button:before {
             content: "";
             position: absolute;
             top: .25em;
             left: .5em;
-            transition: all $speed ease;
+            transition: all 0.25s ease;
             border: .5em solid transparent;
             border-right-width: 0;
             height: 0;
             width: 0;
         }
         .button:hover {
-            border-color: $playColor-hover;
+            border-color: #0a0;
         }
 
         .play:before {
-            border-left: .75em solid $playColor;
+            border-left: .75em solid #aaa;
         }
         .play:hover:before {
-            border-left-color: $playColor-hover;
+            border-left-color: #0a0;
         }
 
         .paused {
             border-radius: 5%;
-            border-color: $pauseColor;
+            border-color: #f00;
         }
         .paused:before {
             border-width: 0;
-            border-left: .4em solid $pauseColor;
-            border-right: .4em solid $pauseColor;
+            border-left: .4em solid #f00;
+            border-right: .4em solid #f00;
             height: 1em;
             width: .2em;
             left: .25em;
         }
         .paused:hover {
-            border-color: $pauseColor-hover;
+            border-color: #aaa;
         }
         .paused:hover:before {
-            border-left-color: $pauseColor-hover;
-            border-right-color: $pauseColor-hover;
+            border-left-color: #aaa;
+            border-right-color: #aaa;
         }
 
-        /* Just for presentation */
-        .button {
-            margin: 40px auto;
+        /* Smaller button for mobile devices */
+        @media screen and (max-width: 768px) {
+            .button {
+                width: 40px;
+                height: 40px;
+            }
+
+            .play:before {
+                border-left: .75em solid #aaa;
+            }
+            .play:hover:before {
+                border-left-color: #0a0;
+            }
+
+            .paused:before {
+                border-width: 0;
+                border-left: .4em solid #f00;
+                border-right: .4em solid #f00;
+                height: 1em;
+                width: .2em;
+                left: .25em;
+            }
+            .paused:hover:before {
+                border-left-color: #aaa;
+                border-right-color: #aaa;
+            }
         }
     </style>
 </head>
@@ -129,7 +147,8 @@
         <div id="player"></div>
         <div id="overlay-permanent"></div>
         <div id="overlay-paused"></div>
-        <div class="button play" aria-label="Play/Pause Button"></div>
+        <input type="checkbox" id="cb-pause">
+        <label class="button play" for="cb-pause" aria-label="Play/Pause Button"></label>
         <button id="start-button" class="control-button" style="display: none;" aria-label="Start Video Button">
             <svg viewBox="0 0 24 24">
                 <polygon points="6,4 20,12 6,20"></polygon>
@@ -137,7 +156,6 @@
         </button>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         var player;
         var videoStarted = false;
