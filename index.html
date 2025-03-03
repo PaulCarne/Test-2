@@ -147,8 +147,7 @@
         <div id="player"></div>
         <div id="overlay-permanent"></div>
         <div id="overlay-paused"></div>
-        <input type="checkbox" id="cb-pause">
-        <label class="button play" for="cb-pause" aria-label="Play/Pause Button"></label>
+        <div class="button play" aria-label="Play/Pause Button"></div>
         <button id="start-button" class="control-button" style="display: none;" aria-label="Start Video Button">
             <svg viewBox="0 0 24 24">
                 <polygon points="6,4 20,12 6,20"></polygon>
@@ -156,6 +155,7 @@
         </button>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         var player;
         var videoStarted = false;
