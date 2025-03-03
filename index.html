@@ -56,100 +56,70 @@
             border: none;
             z-index: 3;
         }
-       /* Rotating Play/Pause Button */
-        input[type="checkbox"] {
-            appearance: none;
-            position: fixed;
-            top: -100%; left: -100%;
-        }
 
-        input[type="checkbox"]:checked + .playButton {
-            --ry: 90deg;
-            --clr: red;
-        }
+        /* New Play/Pause Button Styles */
+        $playColor: #aaa;
+        $playColor-hover: #0a0;
+        $pauseColor: #f00;
+        $pauseColor-hover: #aaa;
+        $buttonSize: 400%;
+        $speed: .25s;
 
-        .playButton {
-            position: absolute;
-            bottom: 20px;
-            left: calc(20px + 1%);
-            width: 50px;
-            height: 50px;
+        .button {
+            font-size: $buttonSize;
+            position: relative;
+            border: 1px solid $playColor;
+            height: 1em;
+            width: 1em;
+            padding: .25em;
             border-radius: 50%;
-            background-color: transparent;
-            perspective: 100px;
-            cursor: pointer;
-            transition: background-color 0.5s;
-            z-index: 6;
+            transition: all $speed ease;
         }
-
-        .icon {
+        .button:before {
+            content: "";
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: rotateY(var(--ry, 0deg));
-            transform-style: preserve-3d;
-            transition: transform 0.5s;
+            top: .25em;
+            left: .5em;
+            transition: all $speed ease;
+            border: .5em solid transparent;
+            border-right-width: 0;
+            height: 0;
+            width: 0;
+        }
+        .button:hover {
+            border-color: $playColor-hover;
         }
 
-        .icon.pause > div {
-            position: absolute;
-            background-color: red;
+        .play:before {
+            border-left: .75em solid $playColor;
+        }
+        .play:hover:before {
+            border-left-color: $playColor-hover;
         }
 
-        .icon.pause > div:nth-child(1) {
-            top: -15px; left: -9px;
-            width: 30px; height: 30px;
-            clip-path: polygon(0 0, 100% 50%, 0 100%);
-            transform: translateZ(-5px);
-            background-image: linear-gradient(334deg, #0005 12px, #0000 19px), linear-gradient(206deg, #0005 12px, #0000 19px), linear-gradient(90deg, #0005, #0000 7px);
+        .paused {
+            border-radius: 5%;
+            border-color: $pauseColor;
+        }
+        .paused:before {
+            border-width: 0;
+            border-left: .4em solid $pauseColor;
+            border-right: .4em solid $pauseColor;
+            height: 1em;
+            width: .2em;
+            left: .25em;
+        }
+        .paused:hover {
+            border-color: $pauseColor-hover;
+        }
+        .paused:hover:before {
+            border-left-color: $pauseColor-hover;
+            border-right-color: $pauseColor-hover;
         }
 
-        .icon.pause > div:nth-child(2) {
-            top: -15px; left: -9px;
-            width: 30px; height: 30px;
-            clip-path: polygon(0 0, 100% 50%, 0 100%);
-            transform: translateZ(15px);
-            background-image: linear-gradient(334deg, #0005 12px, #0000 19px), linear-gradient(206deg, #0005 12px, #0000 19px), linear-gradient(90deg, #0005, #0000 7px);
-        }
-
-        .icon.pause > div:nth-child(3) {
-            top: -15px; left: -9px;
-            width: 10px; height: 30px;
-            transform-origin: left;
-            transform: translateZ(-15px) rotateY(-90deg);
-            box-shadow: 0 0 5px #0005 inset;
-        }
-
-        .icon.pause > div:nth-child(4) {
-            top: -15px; left: -9px;
-            width: 10px; height: 30px;
-            transform-origin: left;
-            transform: translateZ(5px) rotateY(-90deg);
-            box-shadow: 0 0 5px #0005 inset;
-        }
-
-        /* Smaller button for mobile devices */
-        @media screen and (max-width: 768px) {
-            .playButton {
-                width: 40px;
-                height: 40px;
-            }
-
-            .icon.pause > div:nth-child(1),
-            .icon.pause > div:nth-child(2) {
-                top: -12px;
-                left: -7px;
-                width: 20px;
-                height: 20px;
-                background-color: red; /* Ensure red color on mobile */
-            }
-
-            .icon.pause > div:nth-child(3),
-            .icon.pause > div:nth-child(4) {
-                width: 8px;
-                height: 20px;
-                background-color: red; /* Ensure red color on mobile */
-            }
+        /* Just for presentation */
+        .button {
+            margin: 40px auto;
         }
     </style>
 </head>
@@ -159,13 +129,7 @@
         <div id="player"></div>
         <div id="overlay-permanent"></div>
         <div id="overlay-paused"></div>
-        <input type="checkbox" id="cb-pause">
-        <label class="playButton" for="cb-pause" aria-label="Play/Pause Button">
-            <div class="icon pause">
-                <div></div><div></div>
-                <div></div><div></div>
-            </div>
-        </label>
+        <div class="button play" aria-label="Play/Pause Button"></div>
         <button id="start-button" class="control-button" style="display: none;" aria-label="Start Video Button">
             <svg viewBox="0 0 24 24">
                 <polygon points="6,4 20,12 6,20"></polygon>
@@ -173,6 +137,7 @@
         </button>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         var player;
         var videoStarted = false;
@@ -195,17 +160,23 @@
             if (event.data === YT.PlayerState.ENDED) {
                 window.location.href = "https://forms.office.com/r/75jdBjwfDw";
             } else if (event.data === YT.PlayerState.PAUSED) {
-                document.getElementById('cb-pause').checked = false;
+                document.querySelector('.button').classList.remove('paused');
+                document.querySelector('.button').classList.add('play');
             } else if (event.data === YT.PlayerState.PLAYING) {
-                document.getElementById('cb-pause').checked = true;
+                document.querySelector('.button').classList.remove('play');
+                document.querySelector('.button').classList.add('paused');
             }
         }
 
-        document.getElementById('cb-pause').addEventListener('change', function() {
-            if (this.checked) {
+        document.querySelector('.button').addEventListener('click', function() {
+            if (this.classList.contains('play')) {
                 player.playVideo();
+                this.classList.remove('play');
+                this.classList.add('paused');
             } else {
                 player.pauseVideo();
+                this.classList.remove('paused');
+                this.classList.add('play');
             }
         });
 
