@@ -62,7 +62,7 @@
             font-size: 180%;
             position: absolute;
             bottom: 20px;
-            left: 20px;
+            left: calc(20px + 1%);
             border: 1px solid transparent;
             height: 1em;
             width: 1em;
@@ -106,7 +106,7 @@
         /* Adjust button position and size for mobile devices */
         @media screen and (max-width: 768px) {
             .button {
-                left: 20px;
+                left: calc(20px + 3%); /* Move 2% to the right */
                 bottom: 20px;
                 width: 1.5em;
                 height: 1.5em;
